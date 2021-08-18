@@ -15,9 +15,9 @@ object TagInfoDAO {
     if(tagInfoOpt==None){
       throw  new RuntimeException(s" no this taskId $taskId for tag !")
     }
-    tagInfoOpt.get
+     tagInfoOpt.get
   }
-
+  //git remote set-url origin https://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@github.com/wwbbcjeyc/user-profile-task.git
   // 查询所有启用中的标签
   def getTagInfoListOnTask(): List[TagInfo] ={
     val tagInfoList: List[TagInfo] = MySqlUtil.queryList[TagInfo](s"select tg.* from tag_info tg join task_info tk on tg.tag_task_id = tk.id where  tk.task_status='1'   " ,classOf[TagInfo], true )

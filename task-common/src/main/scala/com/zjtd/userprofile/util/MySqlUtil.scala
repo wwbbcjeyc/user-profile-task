@@ -17,7 +17,7 @@ import scala.collection.mutable.ListBuffer
 object MySqlUtil {
 
   def main(args: Array[String]): Unit = {
-    val list: java.util.List[JSONObject] = queryList("select * from base_province")
+    val list: java.util.List[JSONObject] = queryList("select * from tag_info")
     println(list)
   }
 
@@ -28,7 +28,7 @@ object MySqlUtil {
   val MYSQL_USERNAME = properties.getProperty("mysql.username")
   val MYSQL_PASSWORD = properties.getProperty("mysql.password")
 
-
+  //查询列表
   def queryList(sql: String): java.util.List[JSONObject] = {
     Class.forName("com.mysql.jdbc.Driver")
     //创建结果列表
@@ -56,7 +56,7 @@ object MySqlUtil {
     resultList
   }
 
-
+  // 查询列表
   def queryList[T<:AnyRef](sql: String, clazz: Class[T], underScoreToCamel: Boolean):List[T]={
 
     Class.forName("com.mysql.jdbc.Driver");

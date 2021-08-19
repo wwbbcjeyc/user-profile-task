@@ -13,7 +13,7 @@ object MyPropertiesUtil {
 
   def main(args: Array[String]): Unit = {
     val properties: Properties =  MyPropertiesUtil.load("config.properties")
-    println(properties.getProperty("data-warehouse.dbname"))
+    println(properties.getProperty("user-profile.dbname"))
   }
 
   def load(propertieName:String): Properties ={
@@ -24,4 +24,3 @@ object MyPropertiesUtil {
   }
 
 }
-

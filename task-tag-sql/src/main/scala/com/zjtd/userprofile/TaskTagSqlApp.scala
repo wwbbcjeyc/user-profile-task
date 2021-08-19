@@ -5,6 +5,7 @@ import com.zjtd.userprofile.dao.{TagInfoDAO, TaskInfoDAO, TaskTagRuleDAO}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
+
 /**
  * @Author wangwenbo
  * @Date 2021/7/4 11:38 下午
@@ -21,7 +22,7 @@ object TaskTagSqlApp {
   def main(args: Array[String]): Unit = {
 
     val sparkConf: SparkConf = new SparkConf().setAppName("task_tag_sql_app")
-    //.setMaster("local[*]")
+    .setMaster("local[*]")
     val sparkSession: SparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
 
 

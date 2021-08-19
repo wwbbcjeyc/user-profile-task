@@ -6,6 +6,8 @@ package com.zjtd.userprofile.bean
  * @Version 1.0
  */
 import java.util.Date
+import java.lang.Long
+
 case class TaskInfo  (var id: Long = null ,
                       var taskName:String=null,
                       var taskStatus:String=null,

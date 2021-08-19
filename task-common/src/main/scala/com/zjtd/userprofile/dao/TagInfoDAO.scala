@@ -17,6 +17,7 @@ object TagInfoDAO {
     }
      tagInfoOpt.get
   }
+  //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
   //git remote set-url origin https://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@github.com/wwbbcjeyc/user-profile-task.git
   // 查询所有启用中的标签
   def getTagInfoListOnTask(): List[TagInfo] ={

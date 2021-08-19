@@ -1,9 +1,13 @@
 package com.zjtd.userprofile
 
 import com.zjtd.userprofile.bean.{TagInfo, TaskInfo, TaskTagRule}
+import com.zjtd.userprofile.constants.ConstCode
 import com.zjtd.userprofile.dao.{TagInfoDAO, TaskInfoDAO, TaskTagRuleDAO}
+import com.zjtd.userprofile.util.MyPropertiesUtil
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+
+import java.util.Properties
 
 
 /**
@@ -42,6 +46,73 @@ object TaskTagSqlApp {
     println(tagInfo)
     println(taskInfo)
     println(taskTagRuleList)
+
+    //2、 每个标签都保存在对应的标志  一个标签对应一张表   根据定义 建立标签表（如果新标签,没有表）
+    // hive :  create table   if not exists $tagCode ( uid string , tag_value $tag_value_type )
+    // comment '${tagInfo.tagName}' PARTITIONED BY (`dt` STRING)
+    //  ROW FORMAT DELIMITED FIELDS TERMINATED BY '\\t'
+    //  LOCATION    $hdfsPath/$userprofielDbName/$tagCode
+
+    val tableName=tagInfo.tagCode.toLowerCase
+    val tagValueType: String = tagInfo.tagValueType match {
+      case ConstCode.TAG_VALUE_TYPE_STRING => "STRING"
+      case ConstCode.TAG_VALUE_TYPE_LONG => "BIGINT"
+      case ConstCode.TAG_VALUE_TYPE_DECIMAL => "DECIMAL(16,2)"
+      case ConstCode.TAG_VALUE_TYPE_DATE => "STRING"
+    }
+
+    val properties: Properties = MyPropertiesUtil.load("config.properties")
+    val hdfsPath: String = properties.getProperty("hdfs-store.path")
+    val dwDbName: String = properties.getProperty("data-warehouse.dbname")
+    val upDbName: String = properties.getProperty("user-profile.dbname")
+
+    val createSQL=
+      s"""
+         |create table   if not exists ${tableName} ( uid string , tag_value $tagValueType )
+         |     comment '${tagInfo.tagName}' PARTITIONED BY (`dt` STRING)
+         |      ROW FORMAT DELIMITED FIELDS TERMINATED BY '\\t'
+         |       LOCATION    '$hdfsPath/$upDbName/$tableName'
+       """.stripMargin
+
+    println(createSQL)
+
+    //3、 通过sql查询数据仓库中的数据 ，写入到标签表中
+    // insert  overwrite table $tagCode partition (dt='$taskDate')
+    // select   uid,
+    //  case  query_value
+    //         when  'F' then '女'
+    //         when 'M' then '男'
+    //         when  'U' then '未知' end  as  tag_value
+    //  from   ($sql)
+
+    // 3.1  动态根据 tagRule 生成case when 语句
+    // 3.2 针对sql 中的$dt要换成 业务日期
+
+    val taskSql: String = taskInfo.taskSql.replace("$dt",taskDate)
+    println(taskSql)
+    var caseWhenSql=""
+    if(taskTagRuleList.size>0){
+      val whenList: List[String] = taskTagRuleList.map(taskTagRule=>s"when  '${taskTagRule.queryValue}' then '${taskTagRule.subTagValue}'")
+      println(whenList)
+      caseWhenSql="case  query_value " +whenList.mkString(" ")+" end  as  tag_value"
+      println(caseWhenSql)
+    }else{
+      //如果没有子标签匹配的话 把query_value 直接作为tag_value
+      caseWhenSql="   query_value  as  tag_value"
+    }
+
+    val selectSql= s"select uid , $caseWhenSql  from (${taskSql} ) tv"
+
+    val insertSelectSql=s"insert overwrite table   $upDbName.$tableName partition (dt='$taskDate')  $selectSql"
+
+    println(insertSelectSql)
+
+
+    sparkSession.sql("use "+upDbName)
+    sparkSession.sql(createSQL)
+    sparkSession.sql("use "+dwDbName)
+    sparkSession.sql(insertSelectSql)
+
 
   }
 

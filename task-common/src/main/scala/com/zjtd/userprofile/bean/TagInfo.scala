@@ -9,16 +9,16 @@ package com.zjtd.userprofile.bean
  */
 import java.util.Date
 import java.lang.Long
-case class TagInfo(var id:Long,
+case class TagInfo(var id:java.lang.Long,
                    var tagCode:String,
                    var tagName:String,
-                   var tagLevel:Long,
-                   var parentTagId:Long,
+                   var tagLevel:java.lang.Long,
+                   var parentTagId:java.lang.Long,
                    var tagType:String,
                    var tagValueType:String,
-                   var  tagValueLimit:Long,
-                   var  tagValueStep:Long,
-                   var  tagTaskId:Long,
+                   var  tagValueLimit:java.lang.Long,
+                   var  tagValueStep:java.lang.Long,
+                   var  tagTaskId:java.lang.Long,
                    var  tagComment:String,
                    var  createTime:Date,
                    var  updateTime:Date

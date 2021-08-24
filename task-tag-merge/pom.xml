@@ -9,9 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>task-tag-sql</artifactId>
+    <artifactId>task-tag-merge</artifactId>
 
-
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -32,6 +35,7 @@
                     <execution>
                         <!-- 声明绑定到maven的compile阶段 -->
                         <goals>
+                           <!-- <goal>compile</goal>-->
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
@@ -59,7 +63,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>

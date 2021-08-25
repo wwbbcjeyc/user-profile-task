@@ -7,9 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="task-common" />
         <module name="task-tag-merge" />
         <module name="task-tag-sql" />
-        <module name="task-common" />
+        <module name="task-export-ck" />
       </profile>
     </annotationProcessing>
   </component>

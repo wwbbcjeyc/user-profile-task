@@ -12,6 +12,7 @@
         <module>task-tag-sql</module>
         <module>task-common</module>
         <module>task-tag-merge</module>
+        <module>task-export-ck</module>
     </modules>
 
     <properties>

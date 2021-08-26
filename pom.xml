@@ -13,6 +13,7 @@
         <module>task-common</module>
         <module>task-tag-merge</module>
         <module>task-export-ck</module>
+        <module>task-bitmap-ck</module>
     </modules>
 
     <properties>
